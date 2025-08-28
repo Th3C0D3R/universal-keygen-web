@@ -1,6 +1,6 @@
 # 🔑 Retro DSA Keygen Web App
 
-A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, featuring **neon animations, serial generation, clipboard copy, and classic keygen music**. Runs **fully in the browser**, no backend required – perfect for **GitHub Pages**.
+A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, featuring **neon animations, serial generation and clipboard copy**. Runs **fully in the browser**, no backend required – perfect for **GitHub Pages**.
 
 ---
 
@@ -9,7 +9,6 @@ A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, f
 ✔ DSA-based **serial key generation** (browser-compatible)
 ✔ **Neon glowing UI** with animated effects
 ✔ **Clipboard auto-copy** for generated serials
-✔ **Play classic keygen sound** for retro vibes
 ✔ 100% **client-side**, secure, and offline-capable
 
 ---
@@ -25,7 +24,6 @@ A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, f
 1. **Enter your username** in the input box.
 2. Click **Generate Serial**.
 3. Serial is **generated, displayed, and copied to clipboard** automatically.
-4. Click **Play Keygen Sound** for nostalgia.
 
 ---
 
@@ -34,8 +32,8 @@ A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, f
 Clone the repo and open `index.html` in any modern browser:
 
 ```bash
-git clone https://github.com/yourusername/keygen-webapp.git
-cd keygen-webapp
+git clone https://github.com/Th3C0D3R/MacroRecorder_KeyGen.git
+cd MacroRecorder_KeyGen
 open index.html
 ```
 
@@ -52,7 +50,7 @@ open index.html
 ## 🔥 Extras
 
 * Fully responsive for **desktop & mobile**.
-* Includes **animated button loader**, **glowing effects**, and **sound toggle**.
+* Includes **animated button loader**, **glowing effects**.
 
 ---
 
