@@ -14,9 +14,9 @@ A **retro-style key generator** built with **pure JavaScript, HTML, and CSS**, f
 
 ---
 
-## 🎮 Live Demo
+## 🎮 Live
 
-👉 [**View on GitHub Pages**](#) *(Replace with your link)*
+👉 [**View on GitHub Pages**](https://th3c0d3r.github.io/MacroRecorder_KeyGen/)
 
 ---
 
