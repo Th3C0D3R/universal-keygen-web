@@ -16,7 +16,7 @@ async function generateKey() {
     const high = (num2 >> 8) & 0xFF;
     const low = num2 & 0xFF;
     await new Promise(resolve => setTimeout(resolve, 1000));
-    const serial = await generateSerialFromXML(username, PublicKeyXML, [high, low]);
+    const serial = await generateSerialFromXML(username, [high, low], PublicKeyXML);
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     output.value = serial;
