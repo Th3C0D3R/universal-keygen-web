@@ -9,14 +9,13 @@ A **modular, browser-based key generator** built with **pure JavaScript, HTML, a
 ✔ **Modular architecture** – loadable keygen modules registered via manifest  
 ✔ **010 Editor 16.0.4 Keygen** module  
 ✔ **Macro-Recorder 5.9.0 KeyGen** module with DSA signing (SHA-1, ASN.1 DER)  
-✔ **Clipboard copy** for generated keys  
 ✔ 100% **client-side**, secure, and offline-capable  
 
 ---
 
 ## 🎮 Live
 
-👉 [**View on GitHub Pages**](https://th3c0d3r.github.io/MacroRecorder_KeyGen/)
+👉 [**View on GitHub Pages**](https://dev.th3.ovh/universal-keygen-web/)
 
 ---
 
@@ -29,8 +28,8 @@ A **modular, browser-based key generator** built with **pure JavaScript, HTML, a
 5. Copy the output from the result field.
 
 ```bash
-git clone https://github.com/Th3C0D3R/MacroRecorder_KeyGen.git
-cd MacroRecorder_KeyGen
+git clone https://github.com/Th3C0D3R/universal-keygen-web.git
+cd universal-keygen-web
 open index.html
 ```
 
