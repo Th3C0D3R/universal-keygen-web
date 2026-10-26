@@ -1,33 +1,144 @@
-async function generateKey() {
-    const PublicKeyXML = "<DSAKeyValue><P>3N35IcqKMJLdrg5HmSYa6duURBVDNZgj7BCnwcz/ufmuTgBqQSf3cxqHNTX31BTKJWBBdfF2LxA+uLRmTXZGzw==</P><Q>hEN4EgQsu/HHDcZh9Qwxg43wkL8=</Q><G>gYixcJeFwqXYS9td15uvi1o5Ontd6U00qjtvo7aPo4ccNB7jt5SGLEBM9RPsYPKnmC8PRBze5gm2MBgZIm4YsQ==</G><Y>RSijtNxu4sTZc50YrQLR19KX3PEsIGSrvcRYdAUKb1nWGJNY0aAdt/E5HtbMbSqIFPI3mLcOYdgxu9WyzGkRNw==</Y><J>AAAAAat+p7co8MRenHZUQ+BsY94gSFBLvhftoBGgwzmSBZZc+PRlV6daw3iAVN6y</J><Seed>J0VzBGcedEyNe+AWgq/mC/Wf9RU=</Seed><PgenCounter>pg==</PgenCounter><X>EaOoelpYoydZvGFMZHUobAPlfSY=</X></DSAKeyValue>";
-    const username = document.getElementById('username').value.trim();
-    const status = document.getElementById('status');
-    const output = document.getElementById('serialOutput');
-    const generateBtn = document.getElementById('generate');
-    if (!username) {
-        status.textContent = "Please enter a username.";
+import { modules } from "./modules/manifest.js";
+
+const moduleSelect = document.querySelector("#moduleSelect");
+const moduleForm = document.querySelector("#moduleForm");
+const dynamicFields = document.querySelector("#dynamicFields");
+const runButton = document.querySelector("#runButton");
+const moduleOutput = document.querySelector("#moduleOutput");
+const status = document.querySelector("#status");
+
+function setStatus(message) {
+    status.textContent = message;
+}
+
+function renderFields(module) {
+    dynamicFields.replaceChildren();
+
+    for (const field of module.metadata.fields) {
+        const wrapper = document.createElement("div");
+        const id = `field-${field.name}`;
+
+        if (field.type === "checkbox") {
+            wrapper.className = "checkbox-field";
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.id = id;
+            input.name = field.name;
+            input.checked = Boolean(field.default);
+            input.required = Boolean(field.required);
+
+            const label = document.createElement("label");
+            label.htmlFor = id;
+            label.textContent = field.label;
+            wrapper.append(input, label);
+        } else {
+            const label = document.createElement("label");
+            label.htmlFor = id;
+            label.textContent = field.label;
+
+            let input;
+            if (field.type === "select") {
+                input = document.createElement("select");
+                for (const option of field.options) {
+                    const optionElement = document.createElement("option");
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.label;
+                    input.append(optionElement);
+                }
+                if (field.default !== undefined) {
+                    input.value = field.default;
+                }
+            } else if (field.type === "text") {
+                input = document.createElement("input");
+                input.type = "text";
+                input.placeholder = field.placeholder ?? "";
+                input.value = field.default ?? "";
+            } else {
+                throw new Error(`Unsupported field type "${field.type}".`);
+            }
+
+            input.id = id;
+            input.name = field.name;
+            input.required = Boolean(field.required);
+            wrapper.append(label, input);
+        }
+
+        dynamicFields.append(wrapper);
+    }
+}
+
+function selectedModule() {
+    return modules.find((module) => module.metadata.id === moduleSelect.value);
+}
+
+moduleSelect.replaceChildren();
+for (const module of modules) {
+    const option = document.createElement("option");
+    option.value = module.metadata.id;
+    option.textContent = module.metadata.name;
+    moduleSelect.append(option);
+}
+
+if (modules.length === 0) {
+    moduleSelect.disabled = true;
+    runButton.disabled = true;
+    setStatus("No modules are registered.");
+} else {
+    moduleSelect.disabled = false;
+    try {
+        renderFields(modules[0]);
+        runButton.disabled = false;
+        setStatus("Ready.");
+    } catch (error) {
+        runButton.disabled = true;
+        setStatus(error instanceof Error ? error.message : String(error));
+    }
+}
+
+moduleSelect.addEventListener("change", () => {
+    const module = selectedModule();
+    if (!module) {
+        runButton.disabled = true;
+        dynamicFields.replaceChildren();
+        setStatus("The selected module is unavailable.");
         return;
     }
-    generateBtn.classList.add('loading');
-    generateBtn.disabled = true;
-    status.textContent = "Generating serial...";
 
-    const num2 = 240000;
-    const high = (num2 >> 8) & 0xFF;
-    const low = num2 & 0xFF;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const serial = await generateSerialFromXML(username, [high, low], PublicKeyXML);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+        renderFields(module);
+        moduleOutput.value = "";
+        runButton.disabled = false;
+        setStatus("Ready.");
+    } catch (error) {
+        runButton.disabled = true;
+        setStatus(error instanceof Error ? error.message : String(error));
+    }
+});
 
-    output.value = serial;
-    status.textContent = `Serial generated for '${username}'.`;
-    generateBtn.classList.remove('loading');
-    generateBtn.disabled = false;
-}
+moduleForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const module = selectedModule();
+    if (!module) {
+        setStatus("The selected module is unavailable.");
+        return;
+    }
 
-async function copySerial() {
-    const output = document.getElementById('serialOutput');
-    await navigator.clipboard.writeText(output.value);
-    const status = document.getElementById('status');
-    status.textContent = `Serial copied to Clipboard`;
-}
+    const values = module.metadata.fields.map((field) => {
+        const control = moduleForm.elements.namedItem(field.name);
+        return field.type === "checkbox" ? control.checked : control.value;
+    });
+
+    runButton.disabled = true;
+    setStatus("Running module…");
+
+    try {
+        const result = module.interfaced(...values);
+        moduleOutput.value = String(result ?? "");
+        setStatus("Module completed.");
+    } catch (error) {
+        moduleOutput.value = "";
+        setStatus(`Module failed: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+        runButton.disabled = false;
+    }
+});

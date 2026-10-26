@@ -1,30 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Macro Recorder 5.9.0 KeyGen</title>
-    <link rel="stylesheet" href="./css/style.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A modular interface for running local JavaScript demo modules.">
+    <title>KeyGen | 010Editor | MacroRecorder</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./js/app.js"></script>
 </head>
-
 <body>
+    <main class="container">
+        <header>
+            <h1 class="eyebrow">Modular Keygen</h1>
+            <p class="subtitle">Choose a available KeyGen-Module first,<br>then fill out the required data.</p>
+        </header>
 
-    <div class="container">
-        <h1>Macro Recorder 5.9.0 KeyGen</h1>
-        <p class="subtitle">by TH3C0D3R</p>
-        <div class="input-section">
-            <input type="text" id="username" placeholder="Enter Username">
-            <button id="generate" onclick="generateKey()">Generate Serial</button>
-        </div>
-        <div class="output-section">
-            <p id="status">Enter a username to start...</p>
-            <textarea id="serialOutput" readonly></textarea>
-            <button id="copyBtn" onclick="copySerial()">Copy to Clipboard</button>
-        </div>
-    </div>
+        <section class="module-section" aria-labelledby="module-heading">
+            <h2 id="module-heading">Module</h2>
+            <label for="moduleSelect">Available module</label>
+            <select id="moduleSelect" disabled>
+                <option>Loading modules…</option>
+            </select>
+        </section>
 
-    <script src="./js/serial.js"></script>
-    <script src="./js/app.js"></script>
+        <form id="moduleForm" class="form-section">
+            <div id="dynamicFields"></div>
+            <button id="runButton" type="submit" disabled>Generate Key</button>
+        </form>
+
+        <section class="output-section" aria-labelledby="output-heading">
+            <h2 id="output-heading">Output</h2>
+            <textarea id="moduleOutput" rows="5" readonly aria-label="Module output"></textarea>
+            <p id="status" role="status" aria-live="polite">Loading modules…</p>
+        </section>
+
+        <p class="notice">Keygeneration is done locally and its speed depends on your device's hardware.</p>
+    </main>
 </body>
-
 </html>
