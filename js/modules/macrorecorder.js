@@ -12,39 +12,28 @@ export const metadata = {
   ],
 };
 
-export function interfaced() {
+export async function interfaced() {
   const [name] = Array.from(arguments);
-  const value = generateKey(name);
+  const value = await generateKey(name);
   return `${value}`;
 }
 
 
 
-async function generateKey() {
+async function generateKey(name) {
     const PublicKeyXML = "<DSAKeyValue><P>3N35IcqKMJLdrg5HmSYa6duURBVDNZgj7BCnwcz/ufmuTgBqQSf3cxqHNTX31BTKJWBBdfF2LxA+uLRmTXZGzw==</P><Q>hEN4EgQsu/HHDcZh9Qwxg43wkL8=</Q><G>gYixcJeFwqXYS9td15uvi1o5Ontd6U00qjtvo7aPo4ccNB7jt5SGLEBM9RPsYPKnmC8PRBze5gm2MBgZIm4YsQ==</G><Y>RSijtNxu4sTZc50YrQLR19KX3PEsIGSrvcRYdAUKb1nWGJNY0aAdt/E5HtbMbSqIFPI3mLcOYdgxu9WyzGkRNw==</Y><J>AAAAAat+p7co8MRenHZUQ+BsY94gSFBLvhftoBGgwzmSBZZc+PRlV6daw3iAVN6y</J><Seed>J0VzBGcedEyNe+AWgq/mC/Wf9RU=</Seed><PgenCounter>pg==</PgenCounter><X>EaOoelpYoydZvGFMZHUobAPlfSY=</X></DSAKeyValue>";
-    const username = document.getElementById('username').value.trim();
-    const status = document.getElementById('status');
-    const output = document.getElementById('serialOutput');
-    const generateBtn = document.getElementById('generate');
+    const username = name;
     if (!username) {
-        status.textContent = "Please enter a username.";
-        return;
+        throw new Error("Username is required");
     }
-    generateBtn.classList.add('loading');
-    generateBtn.disabled = true;
-    status.textContent = "Generating serial...";
+    
 
     const num2 = 240000;
     const high = (num2 >> 8) & 0xFF;
     const low = num2 & 0xFF;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const serial = await generateSerialFromXML(username, [high, low], PublicKeyXML);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const serial = await generateSerial(username, [high, low], PublicKeyXML);
 
-    output.value = serial;
-    status.textContent = `Serial generated for '${username}'.`;
-    generateBtn.classList.remove('loading');
-    generateBtn.disabled = false;
+    return serial;
 }
 
 // dsa-sign.js
@@ -164,13 +153,4 @@ async function generateSerial(username, expirationTime, keyxml) {
 
     const combined = new Uint8Array([...signature, ...expirationTime]);
     return btoa(String.fromCharCode(...combined));
-}
-
-//
-// Export for usage in browser modules or attach to window
-//
-if (typeof window !== "undefined") {
-    window.dsaSign = dsaSign;
-    window.dsaParseXML = parseDSAKeyFromXML;
-    window.generateSerialFromXML = generateSerial;
 }

@@ -82,7 +82,7 @@ for (const module of modules) {
 if (modules.length === 0) {
     moduleSelect.disabled = true;
     runButton.disabled = true;
-    setStatus("No modules are registered.");
+    setStatus("No generators are registered.");
 } else {
     moduleSelect.disabled = false;
     try {
@@ -100,7 +100,7 @@ moduleSelect.addEventListener("change", () => {
     if (!module) {
         runButton.disabled = true;
         dynamicFields.replaceChildren();
-        setStatus("The selected module is unavailable.");
+        setStatus("The selected generator is unavailable.");
         return;
     }
 
@@ -119,7 +119,7 @@ moduleForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const module = selectedModule();
     if (!module) {
-        setStatus("The selected module is unavailable.");
+        setStatus("The selected generator is unavailable.");
         return;
     }
 
@@ -129,12 +129,12 @@ moduleForm.addEventListener("submit", async (event) => {
     });
 
     runButton.disabled = true;
-    setStatus("Running module…");
+    setStatus("Running generation...");
 
     try {
-        const result = module.interfaced(...values);
+        const result = await module.interfaced(...values);
         moduleOutput.value = String(result ?? "");
-        setStatus("Module completed.");
+        setStatus("Generation completed.");
     } catch (error) {
         moduleOutput.value = "";
         setStatus(`Module failed: ${error instanceof Error ? error.message : String(error)}`);
