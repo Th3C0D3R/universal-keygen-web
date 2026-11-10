@@ -1,6 +1,6 @@
 export const metadata = {
   id: "010editor",
-  name: "010 Editor 16.0.4 Keygen",
+  name: "010 Editor Keygen [16.0.4-17.0.1]",
   fields: [
     {
       name: "name",
@@ -102,7 +102,7 @@ function funcBfd0(value) {
   return transformed % 11 === 0 ? transformed / 11 : 0;
 }
 
-function generateKey(name, userLimit = 17) {
+function generateKey(name, userLimit = 18) {
   if (typeof name !== "string" || name.length === 0) {
     throw new TypeError("Name is required.");
   }
